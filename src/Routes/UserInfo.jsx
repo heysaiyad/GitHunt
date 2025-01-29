@@ -55,7 +55,7 @@ const UserInfo = () => {
             <div className="text-lg leading-10 px-3">
               <h1 className="text-3xl pb-4">{uinfo.name}</h1>
               <h1>
-                <span className="text-teal-400">Login_name</span> :{uinfo.login}
+                <span className="text-teal-400">Username</span> : {uinfo.login}
               </h1>
               <h1>
                 <span className="text-teal-400">followers : </span>

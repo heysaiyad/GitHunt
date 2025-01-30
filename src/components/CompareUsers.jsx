@@ -47,14 +47,15 @@ const CompareUsers = () => {
           placeholder="GitHub Username 1"
           value={user1}
           onChange={(e) => setUser1(e.target.value)}
-          className="input w-64 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          
+          className="h-[2.5rem] p-[0.5rem] w-64 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
           placeholder="GitHub Username 2"
           value={user2}
           onChange={(e) => setUser2(e.target.value)}
-          className="input w-64 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="h-[2.5rem] p-[0.5rem] w-64 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={handleCompare}
@@ -63,16 +64,19 @@ const CompareUsers = () => {
           Compare
         </button>
       </div>
-      {loading && <Loading />}
-      {error1 && !error2 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]"> User 1 not found. Please check the username and try again.</div>}
-      {error2 && !error1 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]">User 2 not found. Please check the username and try again.</div>}
-      {error1 && error2 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]">Both Users not found. Please check the username and try again.</div>}
-      {data1 && data2 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <UserCard user={data1} compareUser={data2} />
-          <UserCard user={data2} compareUser={data1} />
-        </div>
-      )}
+      {loading ? (<Loading/>):(
+      <>
+        {error1 && !error2 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]"> User 1 not found. Please check the username and try again.</div>}
+        {error2 && !error1 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]">User 2 not found. Please check the username and try again.</div>}
+        {error1 && error2 && <div className="text-red-500 mb-4 flex justify-center font-semibold text-[18px]">Both Users not found. Please check the username and try again.</div>}
+        {data1 && data2 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <UserCard user={data1} compareUser={data2} />
+            <UserCard user={data2} compareUser={data1} />
+          </div>
+        )}
+      </>
+    )}
     </div>
   );
 };

@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.input {
-  height: 2.5rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-}
 
 .btn {
   background-color: #1da1f2;

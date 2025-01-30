@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import Loading from "../components/Loading";
 import UsersContainer from "../components/UsersContainer";
-
+import {  useNavigate } from "react-router-dom";
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(null);
   const user = useRef("");
   let EndPoint = "https://api.github.com/users";
+    const navigate = useNavigate();
 
   async function FindUser() {
     setLoading(true);
@@ -25,6 +26,9 @@ const Users = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-gray-200 py-8 px-4">
+      <div className=" font-medium  hover:text-teal-400 text-teal-500 shadow-md transition mx-4 cursor-pointer"  onClick={() => navigate("/")}>
+        BACK
+      </div>
       <div className="flex justify-center items-center my-8">
         <input
           placeholder="Search GitHub username"

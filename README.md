@@ -12,7 +12,7 @@ GitHunt is a web application that allows you to discover, compare, and analyze G
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/GitHunt.git
+    git clone https://github.com/heysaiyad/GitHunt.git
     ```
 2. Navigate to the project directory:
     ```sh
@@ -44,7 +44,3 @@ To preview the production build, run:
 ```sh
 npm run preview
 ```
-
-## License
-
-This project is licensed under the MIT License.

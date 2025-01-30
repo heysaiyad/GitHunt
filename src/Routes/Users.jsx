@@ -21,27 +21,31 @@ const Users = () => {
     setLoading(null);
   }
 
-  useEffect(() => {
-  }, [user, setUsers]);
+  useEffect(() => {}, [user, setUsers]);
 
   return (
-    <div>
-      <div className="flex justify-center h-11  my-5 items-center">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-gray-200 py-8 px-4">
+      <div className="flex justify-center items-center my-8">
         <input
-          placeholder="Search github username"
+          placeholder="Search GitHub username"
           ref={user}
           type="text"
-          className="h-full md:w-1/3 outline-none text-gray-800 px-2 
-          font-semibold text-lg w-2/3"
+          className="h-12 w-2/3 md:w-1/3 bg-gray-800 text-gray-200 placeholder-gray-500 rounded-l-lg px-4 focus:outline-none focus:ring-2 focus:ring-teal-500 text-lg"
         />
         <button
           onClick={FindUser}
-          className="bg-teal-500 font-semibold  px-4 h-full font-[Poppins]"
-        >
+          className="h-12 bg-teal-500 text-white font-semibold px-6 rounded-r-lg hover:bg-teal-400 transition">
           Search
         </button>
       </div>
-      <div>{loading ? <Loading /> : <UsersContainer users={users} />}</div>
+      <div className="text-center text-gray-400 mb-6">
+        <p>"Explore GitHub users, repositories, and more!"</p>
+        <p className="italic">"Start by typing a username above."</p>
+      </div>
+      <div className="mt-8">
+        {loading ? <Loading /> : <UsersContainer users={users} />}
+      </div>
+      
     </div>
   );
 };

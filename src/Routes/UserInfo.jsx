@@ -5,99 +5,93 @@ import Loading from "../components/Loading";
 import Repo from "../components/Repo";
 import Tabs from "../components/Tabs";
 import UsersContainer from "../components/UsersContainer";
+
 const UserInfo = () => {
   const [user, setUser] = useState([]);
   const [type, setType] = useState("repos");
   const [users, setUsers] = useState([]);
-  const [loadind, setLoaing] = useState(null);
+  const [loading, setLoading] = useState(false);
   let EndPoint = "https://api.github.com/users";
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
   async function GetUserInfo() {
     const res = await fetch(EndPoint + pathname);
     const data = await res.json();
     setUser(() => [data]);
   }
+
   async function GetUrls() {
     setUsers([]);
-    setLoaing(true);
+    setLoading(true);
     const res = await fetch(EndPoint + pathname + `/${type}`);
     const data = await res.json();
     setUsers(data);
-    setLoaing(null);
+    setLoading(false);
   }
 
   useEffect(() => {
     GetUserInfo();
     GetUrls();
-    console.log(users);
   }, [pathname, type]);
 
   return (
-    <div className="py-5">
+    <div className="py-8 bg-gradient-to-b from-gray-900 to-black min-h-screen text-gray-300">
       <button
-        onClick={() => navigate("/")}
-        className="px-5 py-1 font-medium mx-1 my-4 bg-teal-600 rounded text-gray-200"
+        onClick={() => navigate("/user")}
+        className="px-5 py-2 font-medium bg-teal-500 hover:bg-teal-400 text-gray-900 rounded-lg shadow-md transition mx-4 my-6"
       >
         BACK
       </button>
+
       {user &&
         user?.map((uinfo, i) => (
           <div
             key={i}
-            className="flex justify-center md:flex-row
-             md:px-0 px-4 flex-col gap-10"
+            className="flex flex-col md:flex-row justify-center items-center gap-10 bg-gray-800 p-6 rounded-xl shadow-lg mx-4"
           >
             <img
               src={uinfo.avatar_url}
-              className="w-[350px] border-4 border-teal-400 md:mx-0 mx-auto"
+              alt="User Avatar"
+              className="w-[250px] h-[250px] border-4 border-teal-400 rounded-full shadow-md"
             />
-            <div className="text-lg leading-10 px-3">
-              <h1 className="text-3xl pb-4">{uinfo.name}</h1>
-              <h1>
-                <span className="text-teal-400">Username</span> : {uinfo.login}
-              </h1>
-              <h1>
-                <span className="text-teal-400">followers : </span>
-                {uinfo.followers}
-              </h1>
-              <h1>
-                <span className="text-teal-400">following : </span>
-                {uinfo.following}
-              </h1>
-              <h1>
-                <span className="text-teal-400">public_repositories : </span>
-                {uinfo.public_repos}
-              </h1>
-              <h1>
-                <span className="text-teal-400">Join : </span>
-                {new Date(uinfo.created_at).toLocaleDateString()}
-              </h1>
+            <div className="text-lg leading-8">
+              <h1 className="text-3xl font-bold text-teal-400 pb-4">{uinfo.name}</h1>
+              <p><span className="font-semibold">Username:</span> {uinfo.login}</p>
+              <p><span className="font-semibold">Followers:</span> {uinfo.followers}</p>
+              <p><span className="font-semibold">Following:</span> {uinfo.following}</p>
+              <p><span className="font-semibold">Public Repositories:</span> {uinfo.public_repos}</p>
+              <p><span className="font-semibold">Joined:</span> {new Date(uinfo.created_at).toLocaleDateString()}</p>
               <a
                 href={uinfo.html_url}
                 target="_blank"
-                className="text-gray-200 
-                  font-semibold rounded cursor-pointer  px-4 py-1 bg-teal-600 my-3 tracking-wide"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-400 text-gray-900 font-semibold rounded-lg shadow-md transition"
               >
-                Visit
+                Visit GitHub Profile
               </a>
             </div>
           </div>
         ))}
-      <div className="flex border-b pb-4 gap-6 mt-[10%] mb-6 justify-center md:text-xl ">
+
+      <div className="flex border-b border-gray-600 pb-4 gap-8 mt-10 mb-6 justify-center text-lg">
         <Tabs type={type} setType={setType} />
       </div>
-      {loadind && <Loading />}
+
+      {loading && <Loading />}
+
       {type === "repos" && (
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-7 w-10/12 mx-auto">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-10/12 mx-auto">
           {users && <Repo users={users} />}
         </div>
       )}
+
       {type === "received_events" && (
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-7 w-10/12 mx-auto ">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-10/12 mx-auto">
           {users && <Events data={users} />}
         </div>
       )}
+
       {type === "followers" && <UsersContainer users={users} />}
     </div>
   );

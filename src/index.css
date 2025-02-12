@@ -30,3 +30,25 @@
 .text-blue-500 {
   color: #4299e1;
 }
+.badge {
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: white;
+}
+
+.most-active-contributor {
+  background-color: #f39c12; /* Gold */
+  box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3);
+}
+
+.best-repos {
+  background-color: #e74c3c; /* Red */
+  box-shadow: 0 4px 6px rgba(231, 76, 60, 0.3);
+}
+
+.social-butterfly {
+  background-color: #3498db; /* Blue */
+  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+}

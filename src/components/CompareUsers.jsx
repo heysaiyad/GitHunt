@@ -9,25 +9,30 @@ const CompareUsers = () => {
   const [loading, setLoading] = useState(false);
   const [error1, setError1] = useState(null);
   const [error2, setError2] = useState(null);
-
   const fetchUserData = async (username, setData, setError) => {
     try {
       const res = await fetch(`https://api.github.com/users/${username}`);
       if (!res.ok) throw new Error("User not found");
       const userData = await res.json();
-
+  
       const reposRes = await fetch(userData.repos_url);
       if (!reposRes.ok) throw new Error("Repositories not found");
       const reposData = await reposRes.json();
-
-      setData({ ...userData, repos: reposData });
+  
+      const eventsRes = await fetch(`https://api.github.com/users/${username}/events`);
+      if (!eventsRes.ok) throw new Error("Events not found");
+      const eventsData = await eventsRes.json();
+  
+      const totalStars = reposData.reduce((acc, repo) => acc + repo.stargazers_count, 0);
+      const recentCommits = eventsData.filter(event => event.type === "PushEvent" && new Date(event.created_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length;
+  
+      setData({ ...userData, repos: reposData, totalStars, recentCommits });
       setError(null);
     } catch (err) {
       setError(err.message);
       setData(null);
     }
   };
-
   const handleCompare = async () => {
     setLoading(true);
     setError1(null);
@@ -89,35 +94,48 @@ const UserCard = ({ user, compareUser }) => {
   };
 
   const topRepos = user.repos
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, 3);
+  .sort((a, b) => b.stargazers_count - a.stargazers_count)
+  .slice(0, 3);
 
-  return (
-    <div className="card bg-gray-800 text-white p-6 rounded-lg shadow-lg">
-      <img src={user.avatar_url} alt={user.login} className="w-24 h-24 rounded-full mx-auto mb-4" />
-      <h2 className="text-2xl font-semibold mb-2">{user.name}</h2>
-      <p className="text-gray-400 mb-4">{user.bio}</p>
-      <p className={`mb-2 ${highlightClass(user.followers, compareUser.followers)}`}>
-        Followers: {user.followers}
-      </p>
-      <p className={`mb-2 ${highlightClass(user.following, compareUser.following)}`}>
-        Following: {user.following}
-      </p>
-      <p className={`mb-4 ${highlightClass(user.public_repos, compareUser.public_repos)}`}>
-        Public Repos: {user.public_repos}
-      </p>
-      <h3 className="text-xl font-semibold mb-2">Top Repositories:</h3>
-      <ul className="list-disc list-inside">
-        {topRepos.map((repo) => (
-          <li key={repo.id}>
-            <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-              {repo.name}
-            </a> - ⭐ {repo.stargazers_count}
-          </li>
-        ))}
-      </ul>
+const badges = [
+  user.recentCommits > compareUser.recentCommits && "Most Active Contributor",
+  user.totalStars > compareUser.totalStars && "Best Repos",
+  user.followers > compareUser.followers && "Social Butterfly",
+].filter(Boolean);
+
+return (
+  <div className="card bg-gray-800 text-white p-6 rounded-lg shadow-lg">
+    <img src={user.avatar_url} alt={user.login} className="w-24 h-24 rounded-full mx-auto mb-4" />
+    <h2 className="text-2xl font-semibold mb-2">{user.name}</h2>
+    <div className="flex justify-center mb-4">
+      {badges.map((badge, index) => (
+        <span key={index} className={`badge ${badge.replace(/\s+/g, '-').toLowerCase()} mx-1 px-3 py-1 rounded-full text-sm font-semibold`}>
+          {badge}
+        </span>
+      ))}
     </div>
-  );
+    <p className="text-gray-400 mb-4">{user.bio}</p>
+    <p className={`mb-2 ${highlightClass(user.followers, compareUser.followers)}`}>
+      Followers: {user.followers}
+    </p>
+    <p className={`mb-2 ${highlightClass(user.following, compareUser.following)}`}>
+      Following: {user.following}
+    </p>
+    <p className={`mb-4 ${highlightClass(user.public_repos, compareUser.public_repos)}`}>
+      Public Repos: {user.public_repos}
+    </p>
+    <h3 className="text-xl font-semibold mb-2">Top Repositories:</h3>
+    <ul className="list-disc list-inside">
+      {topRepos.map((repo) => (
+        <li key={repo.id}>
+          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+            {repo.name}
+          </a> - ⭐ {repo.stargazers_count}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 };
 
 export default CompareUsers;
